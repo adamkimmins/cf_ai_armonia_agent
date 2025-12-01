@@ -212,13 +212,6 @@ function updateDictionLabel() {
   dictionLabel.textContent = `Diction: ${dic}`;
 }
 
-// function updateTempoLabel() {
-//   const s = snap(tempoSlider.value);
-//   tempoSlider.value = s;
-//   const tempo = mapTempo(s);
-//   tempoLabel.textContent = `Tempo: ${tempo}`;
-// }
-
 // Bind slider updates
 toneSlider?.addEventListener("input", updateToneLabel);
 dictionSlider?.addEventListener("input", updateDictionLabel);

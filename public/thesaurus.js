@@ -44,23 +44,34 @@ updateLineNumbers();
 /* -------------------------------------------------------
  *  Format the backend output into readable HTML
  * -----------------------------------------------------*/
-function formatSynonymResponse(text) {
-  if (!text.trim()) return "<p>No synonyms found.</p>";
-
-  const lines = text.split("\n");
+function formatSynonymResponse(data) {
+  if (!data || (!data.normal?.length && !data.slang?.length)) {
+    return "<p>No synonyms found.</p>";
+  }
 
   let html = "";
-  for (const line of lines) {
-    // Example: "1. river – synonyms: waterway, stream..."
-    if (/^\d+\./.test(line)) {
-      html += `<div class="syn-line"><strong>${line}</strong></div>`;
-    } else {
-      html += `<div class="syn-detail">${line}</div>`;
-    }
+
+  // Normal Synonyms
+  if (data.normal?.length) {
+    html += `<div class="syn-section"><h3>Synonyms</h3>`;
+    data.normal.slice(0, 5).forEach((syn) => {
+      html += `<div class="syn-word">• ${syn}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Slang / Loose / Dialect Synonyms
+  if (data.slang?.length) {
+    html += `<div class="syn-section"><h3>Slang / Loose</h3>`;
+    data.slang.slice(0, 5).forEach((syn) => {
+      html += `<div class="syn-slang">• ${syn}</div>`;
+    });
+    html += `</div>`;
   }
 
   return html;
 }
+
 
 /* -------------------------------------------------------
  *  Send to Worker → Display Output
@@ -89,7 +100,7 @@ async function analyzeSynonyms() {
     }
 
     const data = await resp.json();
-    synOutput.innerHTML = formatSynonymResponse(data.output);
+    synOutput.innerHTML = renderMarkdown(data.output);
 
   } catch (err) {
     console.error("[Armonia Thesaurus] Network error:", err);
@@ -99,3 +110,35 @@ async function analyzeSynonyms() {
 
 
 synButton?.addEventListener("click", analyzeSynonyms);
+
+function renderMarkdown(md) {
+    if (!md) return "";
+
+    let html = md;
+
+    // Bold **text**
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+    // Italic *text*
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+    // Headings (#, ##, ###)
+    html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+    html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+    // Numbered lists
+    html = html.replace(/^\s*\d+\.\s+(.*)$/gim, "<li>$1</li>");
+    html = html.replace(/(<li>.*<\/li>)/gim, "<ol>$1</ol>");
+
+    // Bullet lists
+    html = html.replace(/^\s*-\s+(.*)$/gim, "<li>$1</li>");
+    html = html.replace(/(<li>.*<\/li>)/gim, "<ul>$1</ul>");
+
+    // Line breaks → <br>
+    html = html.replace(/\n/g, "<br>");
+
+    return html.trim();
+}
+
+

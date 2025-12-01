@@ -19,7 +19,7 @@ export default {
     // ---------- HELP CHAT ----------
     if (url.pathname === "/chat" && request.method === "POST") {
       const { history, message } = await request.json();
-      const system = makeSystemPrompt("DAW_HELP", {}, armoniaProtocol);
+      const system = makeSystemPrompt("help", {}, armoniaProtocol);
 
       const messages = [
         { role: "system", content: system },
@@ -81,7 +81,7 @@ if (url.pathname === "/lyric" && request.method === "POST") {
 
   // Build a system prompt using the Armonia Protocol
   const system = armoniaProtocol
-    .replace(/{{MODE}}/g, "LYRIC_GENERATOR")
+    .replace(/{{MODE}}/g, "Writing")
     .replace(/{{DIALECT}}/g, dialect || "Default")
     .replace(/{{GENRE}}/g, genres?.join(", ") || "None")
     .replace(/{{MOOD}}/g, tone || "Neutral")
@@ -113,7 +113,7 @@ if (url.pathname === "/lyric" && request.method === "POST") {
     if (url.pathname === "/synonyms" && request.method === "POST") {
       const { lines } = await request.json();
 
-      const system = makeSystemPrompt("THESAURUS", {}, armoniaProtocol);
+      const system = makeSystemPrompt("Thesaurus", {}, armoniaProtocol);
 
       const msg = lines.map((line, i) => `${i + 1}. ${line}`).join("\n");
 

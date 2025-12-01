@@ -3,31 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Armonia • AI Assistant</title>
+    <title>Armonia AI Assistant</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
    
     <!-- Container for Armonia layout -->
+     <span id="top-anchor" style="text-align: center;"><h1>Armonia AI</h1></span>
     <div id="armonia-layout">
 
         <!-- a HELP CHAT -->
-      <section id="help-chat" > 
-        <h1 style="text-align:center;">1.</h1>
-        <div class="panel">
-        <h2>Armonia Help Assistant</h2>
+      <section id="help-chat" class="panel" > 
+        <h2>Help Bot</h2>
         <div id="help-chat-log" class="chat-log"></div>
         <div class="chat-input-row">
           <textarea id="help-chat-input" placeholder="Ask anything about Armonia…"></textarea>
           <button id="help-chat-send">Send</button>
-        </div></div>
+        </div>
+
       </section>
 
       <hr/>
 
       <!-- b STYLED LYRIC WRITER -->
       <section id="lyric-writer" class="panel">
-        <h2>Styled Lyric Writer</h2>
+        <h2>Lyric Writer</h2>
 
         <!-- Dialect -->
         <label>Dialect:</label>
@@ -78,18 +78,14 @@
       <hr/>
 
       <!-- c THESAURUS TOOL -->
-
-            <!-- OLD VERSION -->
        <section id="thesaurus" class="panel">
-        <h2>Synonym & Thesaurus Tool</h2>
+        <h2>Thesaurus Tool</h2>
         <div class="line-editor">
           <span id="line-numbers"></span>
           <textarea id="synonym-input"></textarea>
         </div>
         <button id="synonym-analyze">Analyze Lines</button>
-        
         <div id="synonym-output"></div>
-        <!-- <div id="thesaurus-popup" class="hidden"></div> -->
       </section> 
 
     <!--End Flex Container-->

@@ -153,30 +153,45 @@ function trimHistoryUI() {
  *  Show / hide typing indicator
  * -----------------------------------------------------*/
 function showTypingIndicator() {
-  if (typingIndicator) return; // already exists
+  // if (typingIndicator) return; // already exists
 
-  typingIndicator = document.createElement("div");
-  typingIndicator.className = "msg-row assistant";
+  // typingIndicator = document.createElement("div");
+  // typingIndicator.className = "msg-row assistant";
 
-  const bubble = document.createElement("div");
-  bubble.className = "msg-bubble";
-  bubble.innerHTML = `
-    <span class="typing-dot"></span>
-    <span class="typing-dot"></span>
-    <span class="typing-dot"></span>
-  `;
+  // const bubble = document.createElement("div");
+  // bubble.className = "msg-bubble";
+  // bubble.innerHTML = `
+  //   <span class="typing-dot"></span>
+  //   <span class="typing-dot"></span>
+  //   <span class="typing-dot"></span>
+  // `;
 
-  typingIndicator.appendChild(bubble);
-  helpLog.appendChild(typingIndicator);
+  // typingIndicator.appendChild(bubble);
+  // helpLog.appendChild(typingIndicator);
 
-  scrollChatToBottom();
+  // scrollChatToBottom();
+  const typing = document.createElement("div");
+    typing.classList.add("msg-row", "assistant");
+    typing.id = "typing-indicator";
+    typing.innerHTML = `
+        <div class="msg-bubble">
+            <div class="typing-dots">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+        </div>`;
+    helpLog.appendChild(typing);
+    helpLog.scrollTop = helpLog.scrollHeight;
 }
 
 function hideTypingIndicator() {
-  if (typingIndicator) {
-    typingIndicator.remove();
-    typingIndicator = null;
-  }
+  // if (typingIndicator) {
+  //   typingIndicator.remove();
+  //   typingIndicator = null;
+  // }
+  const el = document.getElementById("typing-indicator");
+    if (el) el.remove();
 }
 
 /* -------------------------------------------------------
