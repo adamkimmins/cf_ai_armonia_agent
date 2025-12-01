@@ -4,274 +4,101 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Armonia • AI Assistant</title>
-    <style>
-      :root {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color-scheme: dark;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: radial-gradient(circle at top, #24263a, #050509);
-      }
-
-      .chat-shell {
-        width: min(480px, 100% - 2rem);
-        max-height: 80vh;
-        display: flex;
-        flex-direction: column;
-        background: rgba(10, 10, 18, 0.95);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
-        overflow: hidden;
-      }
-
-      .chat-header {
-        padding: 0.9rem 1.1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-      }
-
-      .chat-avatar {
-        width: 28px;
-        height: 28px;
-        border-radius: 999px;
-        background: conic-gradient(from 180deg, #ffb347, #ffcc33, #66ccff, #9b5cff, #ffb347);
-        padding: 2px;
-      }
-
-      .chat-avatar-inner {
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        background: radial-gradient(circle at 30% 30%, #1a1b29, #050509);
-      }
-
-      .chat-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-      }
-
-      .chat-subtitle {
-        font-size: 0.75rem;
-        opacity: 0.7;
-      }
-
-      .chat-log {
-        flex: 1;
-        padding: 0.75rem 1rem 0.75rem;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-      }
-
-      .msg-row {
-        display: flex;
-      }
-
-      .msg-row.user {
-        justify-content: flex-end;
-      }
-
-      .msg-row.assistant {
-        justify-content: flex-start;
-      }
-
-      .msg-bubble {
-        max-width: 80%;
-        padding: 0.5rem 0.75rem;
-        border-radius: 12px;
-        line-height: 1.4;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-
-      .msg-row.user .msg-bubble {
-        background: linear-gradient(135deg, #4e8cff, #7a5cff);
-        color: #fdfdfd;
-        border-bottom-right-radius: 4px;
-      }
-
-      .msg-row.assistant .msg-bubble {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        color: #f3f3f6;
-        border-bottom-left-radius: 4px;
-      }
-
-      .chat-footer {
-        padding: 0.6rem 0.6rem 0.7rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .chat-form {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .chat-input {
-        flex: 1;
-        border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 0.4rem 0.9rem;
-        background: rgba(0, 0, 0, 0.2);
-        color: #f7f7fb;
-        font-size: 0.9rem;
-        outline: none;
-      }
-
-      .chat-input:focus {
-        border-color: #7a5cff;
-        box-shadow: 0 0 0 1px rgba(122, 92, 255, 0.6);
-      }
-
-      .chat-send {
-        border-radius: 999px;
-        border: none;
-        padding: 0.4rem 0.95rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        cursor: pointer;
-        background: linear-gradient(135deg, #ffb347, #ff8a52);
-        color: #1b1309;
-      }
-
-      .chat-send:disabled {
-        opacity: 0.5;
-        cursor: default;
-      }
-
-      .chat-status {
-        margin-top: 0.25rem;
-        font-size: 0.75rem;
-        opacity: 0.7;
-        min-height: 1em;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="chat-shell">
-      <header class="chat-header">
-        <div class="chat-avatar">
-          <div class="chat-avatar-inner"></div>
-        </div>
-        <div>
-          <div id="heading" class="chat-title">Armonia • AI Assistant</div>
-          <div class="chat-subtitle">Ask about recording, mixing, and more.</div>
-        </div>
-      </header>
+   
+    <!-- Container for Armonia layout -->
+    <div id="armonia-layout">
 
-      <div id="chat-log" class="chat-log"></div>
+        <!-- a HELP CHAT -->
+      <section id="help-chat" > 
+        <h1 style="text-align:center;">1.</h1>
+        <div class="panel">
+        <h2>Armonia Help Assistant</h2>
+        <div id="help-chat-log" class="chat-log"></div>
+        <div class="chat-input-row">
+          <textarea id="help-chat-input" placeholder="Ask anything about Armonia…"></textarea>
+          <button id="help-chat-send">Send</button>
+        </div></div>
+      </section>
 
-      <footer class="chat-footer">
-        <form id="chat-form" class="chat-form">
-          <input
-            id="chat-input"
-            class="chat-input"
-            type="text"
-            autocomplete="off"
-            placeholder="Ask Armonia about your track..."
-          />
-          <button id="chat-send" class="chat-send" type="submit">Send</button>
-        </form>
-        <div id="chat-status" class="chat-status"></div>
-      </footer>
+      <hr/>
+
+      <!-- b STYLED LYRIC WRITER -->
+      <section id="lyric-writer" class="panel">
+        <h2>Styled Lyric Writer</h2>
+
+        <!-- Dialect -->
+        <label>Dialect:</label>
+        <select id="dialect-select">
+          <option value="Default">Default (Standard American English)</option>
+          <option value="Appalachian">Appalachian</option>
+          <option value="Southern">Southern</option>
+          <option value="West Coast">West Coast</option>
+          <option value="Midwest">Midwest</option>
+          <option value="Cowboy">Cowboy / Western</option>
+          <option value="Nashville">Nashville Songwriter</option>
+          <option value="New England">New England Folk</option>
+        </select>
+
+        <!-- Genre Multi-Select -->
+        <div id="genre-multiselect" class="multiselect">
+          <div id="genre-display" class="display-row">Select Genre ▾</div>
+          <div id="genre-dropdown" class="dropdown hidden">
+            <div class="item">Pop</div>
+            <div class="item">Country</div>
+            <div class="item">Retro</div>
+            <div class="item">Old School</div>
+            <div class="item">Jolly</div>
+            <div class="item">Bluegrass</div>
+            <div class="item">Folk</div>
+            <div class="item">Indie Rock</div>
+            <div class="item">Soul</div>
+            <button id="genre-done" class="done hidden">✔ Done</button>
+          </div>
+        </div>
+
+        <!-- Tone Slider -->
+        <label for="tone-slider">Tone:</label>
+        <input type="range" id="tone-slider" min="0" max="100" step="1" />
+        <div id="tone-label" class="slider-label">Tone: Neutral</div>
+
+        <!-- Diction Slider -->
+        <label for="diction-slider">Diction:</label>
+        <input type="range" id="diction-slider" min="0" max="100" />
+        <div id="diction-label" class="slider-label">Diction: Conversational</div>
+
+        <!-- Lyric Prompt -->
+        <textarea id="lyric-input" placeholder="Describe the lyrics you want…"></textarea>
+        <button id="lyric-generate">Generate Lyrics</button>
+        <pre id="lyric-output"></pre>
+      </section>
+
+      <hr/>
+
+      <!-- c THESAURUS TOOL -->
+
+            <!-- OLD VERSION -->
+       <section id="thesaurus" class="panel">
+        <h2>Synonym & Thesaurus Tool</h2>
+        <div class="line-editor">
+          <span id="line-numbers"></span>
+          <textarea id="synonym-input"></textarea>
+        </div>
+        <button id="synonym-analyze">Analyze Lines</button>
+        
+        <div id="synonym-output"></div>
+        <!-- <div id="thesaurus-popup" class="hidden"></div> -->
+      </section> 
+
+    <!--End Flex Container-->
     </div>
 
-    <script>
-      const headingEl = document.getElementById("heading");
-      const chatLog = document.getElementById("chat-log");
-      const form = document.getElementById("chat-form");
-      const input = document.getElementById("chat-input");
-      const statusEl = document.getElementById("chat-status");
-      const sendBtn = document.getElementById("chat-send");
-
-      // Keep conversation on the client; we send it to the Worker each turn.
-      const history = [];
-
-      function appendMessage(role, text) {
-        const row = document.createElement("div");
-        row.className = `msg-row ${role}`;
-
-        const bubble = document.createElement("div");
-        bubble.className = "msg-bubble";
-        bubble.textContent = text;
-
-        row.appendChild(bubble);
-        chatLog.appendChild(row);
-        chatLog.scrollTop = chatLog.scrollHeight;
-      }
-
-      async function sendMessage(message) {
-        statusEl.textContent = "Thinking…";
-        sendBtn.disabled = true;
-
-        try {
-          const resp = await fetch("/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ history, message }),
-          });
-
-          if (!resp.ok) {
-            const errText = await resp.text();
-            statusEl.textContent = "Error from worker.";
-            console.error("Chat error:", errText);
-            return;
-          }
-
-          const data = await resp.json();
-          const answer = data.answer ?? "[No answer field returned]";
-
-          // Update history we send on subsequent turns
-          history.push({ role: "user", content: message });
-          history.push({ role: "assistant", content: answer });
-
-          appendMessage("assistant", answer);
-          statusEl.textContent = "";
-        } catch (err) {
-          console.error(err);
-          statusEl.textContent = "Network error.";
-        } finally {
-          sendBtn.disabled = false;
-        }
-      }
-
-      // Initial heading from /message (optional, but mirrors the old example)
-      fetch("/message")
-        .then((resp) => resp.text())
-        .then((text) => {
-          if (text && text.trim()) {
-            headingEl.textContent = text;
-          }
-        })
-        .catch(() => {});
-
-      // Start with a friendly assistant greeting
-      appendMessage(
-        "assistant",
-        "Hey! I’m Armonia’s built-in assistant. Ask me about recording, mixing, or how to structure your song."
-      );
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const value = input.value.trim();
-        if (!value) return;
-
-        input.value = "";
-        appendMessage("user", value);
-        sendMessage(value);
-      });
-    </script>
+    <!-- UI Scripts -->
+    <script src="helpChat.js"></script>
+    <script src="lyricAssistant.js"></script>
+    <script src="thesaurus.js"></script>
+    
   </body>
 </html>

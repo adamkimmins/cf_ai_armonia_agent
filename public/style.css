@@ -1,0 +1,463 @@
+:root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, #24263a, #050509);
+        display: block; /* restore normal layout flow */
+        padding: 2rem;
+        box-sizing: border-box;
+        }
+
+        body, input, textarea, select, button {
+        font-size: 15px;
+        }
+
+        /* Flex Box */
+      #armonia-layout {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2.5rem;
+        width: 100%;
+        padding: 2rem;
+        box-sizing: border-box;
+        }
+
+        .panel {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 1.1rem;
+        flex: 1;
+        max-width: 360px;
+        min-width: 200px;
+        }
+
+        .panel h2 {
+        font-size: 1.4rem;
+        }
+
+      #help-chat-input {
+  width: 100%;
+  min-height: 40px;
+  max-height: 160px;
+  resize: vertical;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #eee;
+  font-size: 0.9rem;
+}
+.chat-input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+#help-chat-send {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+       #help-chat {
+        margin-bottom: 2rem;
+        }
+
+#help-chat-log {
+  background: rgba(255,255,255,0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+/* Make bubbles consistent */
+.msg-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.msg-row.user { justify-content: flex-end; }
+.msg-row.assistant { justify-content: flex-start; }
+
+.msg-bubble {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  white-space: pre-wrap;
+  max-width: 75%;
+}
+
+.msg-row.user .msg-bubble {
+  background: #4e8cff;
+  color: #fff;
+}
+
+
+      .chat-footer {
+        padding: 0.6rem 0.6rem 0.7rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .chat-form {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .chat-input {
+        flex: 1;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 0.4rem 0.9rem;
+        background: rgba(0, 0, 0, 0.2);
+        color: #f7f7fb;
+        font-size: 0.9rem;
+        outline: none;
+      }
+
+      .chat-input:focus {
+        border-color: #7a5cff;
+        box-shadow: 0 0 0 1px rgba(122, 92, 255, 0.6);
+      }
+
+      .chat-send {
+        border-radius: 999px;
+        border: none;
+        padding: 0.4rem 0.95rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        background: linear-gradient(135deg, #ffb347, #ff8a52);
+        color: #1b1309;
+      }
+
+      .chat-send:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      .chat-status {
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+        opacity: 0.7;
+        min-height: 1em;
+      }
+
+/* LOADING ... */
+.typing-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #aaa;
+  border-radius: 50%;
+  animation: blink 1.4s infinite both;
+}
+
+
+.typing-dot:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: .4s;
+}
+
+@keyframes blink {
+  0% { opacity: .2; }
+  20% { opacity: 1; }
+  100% { opacity: .2; }
+}
+
+/* ---------------------------------------------
+   LYRIC ASSISTANT PANEL STYLING
+---------------------------------------------- */
+
+#lyric-writer {
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 2rem;
+}
+
+#lyric-writer select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+/* Slider Label (Tone / Diction / Tempo) */
+.slider-label {
+  margin-top: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #b5b5b5;
+}
+
+/* Range Slider */
+input[type="range"] {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #4da3ff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(77,163,255,0.6);
+  transition: 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Dropdown Styling */
+.multiselect {
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.display-row {
+  background: rgba(255,255,255,0.06);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.display-row:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.dropdown {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 10px;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown.hidden {
+  display: none;
+}
+
+/* Genre Items */
+.dropdown .item {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: background 0.15s;
+}
+
+.dropdown .item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.dropdown .item.selected {
+  background: rgba(77,163,255,0.3);
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Done button */
+#genre-done {
+  display: block;
+  margin: 10px auto 0 auto;
+  background: #4da3ff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#genre-done.hidden {
+  display: none;
+}
+
+/* Textarea */
+#lyric-input {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #eee;
+  outline: none;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+/* Output Box */
+#lyric-output {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  color: #ddd;
+  white-space: pre-wrap;
+}
+
+
+/* Thesaurus */
+.line-editor {
+  position: relative;
+  display: flex;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#line-numbers {
+  padding: 8px 6px;
+  text-align: right;
+  user-select: none;
+  color: #777;
+  background: rgba(0,0,0,0.2);
+  font-family: monospace;
+  line-height: 1.4em;
+}
+
+#synonym-input {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  resize: none;
+  background: transparent;
+  color: #eee;
+  font-family: monospace;
+  line-height: 1.4em;
+  outline: none;
+}
+
+#synonym-analyze {
+  padding: 8px 14px;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  cursor: pointer;
+}
+
+#synonym-output {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.syn-line {
+  margin-top: 0.6rem;
+  font-weight: bold;
+}
+
+.syn-detail {
+  margin-left: 1rem;
+  opacity: 0.9;
+}
+
+
+/* ----------- MODE TOGGLE ------------ */
+#lyric-mode-toggle {
+  display: flex;
+  gap: 6px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mode-option {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #bbb;
+  transition: 0.2s;
+}
+
+.mode-option.active {
+  background: rgba(80,150,255,0.25);
+  border-color: rgba(80,150,255,0.6);
+  color: white;
+}
+
+/* ----------- SUGGESTION PANEL ----------- */
+
+/* Collapsible thesaurus panel */
+/* #thesaurus-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+#thesaurus-panel.expanded {
+  max-height: 260px; /* or whatever height you like
+}
+
+
+#thesaurus-toggle-btn {
+  transform: rotate(0deg);
+  transition: transform 0.25s ease;
+}
+
+#thesaurus-panel.expanded #thesaurus-toggle-btn {
+  transform: rotate(180deg);
+}
+
+
+.suggestion-section h3 {
+  margin: 0.4rem 0 0.2rem 0;
+  color: #ddd;
+}
+
+.suggestion-word {
+  padding-left: 6px;
+  color: #bbb;
+  font-size: 0.9rem;
+} */

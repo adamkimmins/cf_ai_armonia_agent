@@ -8,121 +8,170 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-// src/index.js (or index.js if that's what your wrangler "main" is)
+import armoniaProtocol from "./prompts/armonia_protocol.txt";
 
-const MODEL_ID = "@cf/meta/llama-3.1-8b-instruct"; 
-// Llama 3.1 8B Instruct is Cloudflare's recommended general chat model.:contentReference[oaicite:1]{index=1}
+const MODEL_ID = "@cf/meta/llama-3.1-8b-instruct";
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Simple health/label endpoint used by the frontend
-    if (request.method === "GET" && url.pathname === "/message") {
-      return new Response("Armonia • AI Assistant", {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
-    }
+    // ---------- HELP CHAT ----------
+    if (url.pathname === "/chat" && request.method === "POST") {
+      const { history, message } = await request.json();
+      const system = makeSystemPrompt("DAW_HELP", {}, armoniaProtocol);
 
-    // Chat endpoint: accepts JSON { history: [...], message: "..." }
-    if (request.method === "POST" && url.pathname === "/chat") {
-      if (!env.AI) {
-        return new Response(
-          "Workers AI binding (env.AI) is not configured. Add an 'ai' binding to wrangler.jsonc.",
-          { status: 500 },
-        );
-      }
-
-      let body;
-      try {
-        body = await request.json();
-      } catch {
-        return new Response(
-          JSON.stringify({ error: "Invalid JSON body." }),
-          { status: 400, headers: { "Content-Type": "application/json" } },
-        );
-      }
-
-      const history = Array.isArray(body?.history) ? body.history : [];
-      const message = typeof body?.message === "string" ? body.message.trim() : "";
-
-      if (!message) {
-        return new Response(
-          JSON.stringify({ error: "Missing 'message' string in request body." }),
-          { status: 400, headers: { "Content-Type": "application/json" } },
-        );
-      }
-
-      // Build the chat messages array for Workers AI
       const messages = [
-        {
-          role: "system",
-          content:
-            "Armonia" +
-            "" +
-            "" +
-            "",
-        },
-        // previous turns the browser sends up
-        ...history,
-        // the new user message for this turn
-        { role: "user", content: message },
+        { role: "system", content: system },
+        ...(history || []),
+        { role: "user", content: message }
       ];
 
-      try {
-        // Call Workers AI
-        const result = await env.AI.run(MODEL_ID, {
-          messages,
-          max_tokens: 512,
-          temperature: 0.7,
-        }); // env.AI.run is the recommended binding API for Workers AI.:contentReference[oaicite:2]{index=2}
-
-        // Workers AI generally returns { response: "text", ... } for text models.:contentReference[oaicite:3]{index=3}
-        let answerText;
-        if (typeof result === "string") {
-          answerText = result;
-        } else if (typeof result?.response === "string") {
-          answerText = result.response;
-        } else if (typeof result?.output_text === "string") {
-          answerText = result.output_text;
-        } else {
-          // Fallback: return the raw object for debugging
-          answerText = JSON.stringify(result);
-        }
-
-        return new Response(
-          JSON.stringify({ answer: answerText }),
-          { headers: { "Content-Type": "application/json" } },
-        );
-      } catch (err) {
-        console.error("AI error:", err);
-        return new Response(
-          JSON.stringify({ error: "AI request failed." }),
-          { status: 500, headers: { "Content-Type": "application/json" } },
-        );
-      }
+      const result = await env.AI.run(MODEL_ID, { messages });
+      return json({ answer: extract(result) });
     }
 
-    // Optional: keep the old UUID endpoint for debugging if you want
-    if (request.method === "GET" && url.pathname === "/random") {
-      return new Response(crypto.randomUUID(), {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
+if (url.pathname === "/lyric" && request.method === "POST") {
+  const data = await request.json();
+
+  const {
+    dialect,
+    genres,
+    tone,
+    diction,
+    message
+  } = data;
+
+  // Build a system prompt from your Armonia protocol
+  const system = `
+You are Armonia-AI, an assistant that writes original lyrics.
+Follow all user style controls strictly.
+
+Dialect: ${dialect}
+Genres: ${genres.join(", ")}
+Tone: ${tone}
+Diction Style: ${diction}
+
+Write lyrics that match all parameters closely.
+`;
+
+  const messages = [
+    { role: "system", content: system },
+    { role: "user", content: message }
+  ];
+
+  const result = await env.AI.run(MODEL_ID, { messages });
+  const output = extract(result);
+
+  return json({ lyrics: output });
+}
+
+    //TODO
+    // ---------------- LYRIC GENERATOR ROUTE ----------------
+if (url.pathname === "/lyric" && request.method === "POST") {
+  const data = await request.json();
+
+  const {
+    dialect,
+    genres,
+    tone,
+    diction,
+    message
+  } = data;
+
+  // Build a system prompt using the Armonia Protocol
+  const system = armoniaProtocol
+    .replace(/{{MODE}}/g, "LYRIC_GENERATOR")
+    .replace(/{{DIALECT}}/g, dialect || "Default")
+    .replace(/{{GENRE}}/g, genres?.join(", ") || "None")
+    .replace(/{{MOOD}}/g, tone || "Neutral")
+    .replace(/{{DICTION}}/g, diction || "Conversational");
+
+  const messages = [
+    { role: "system", content: system },
+    { role: "user", content: message }
+  ];
+
+  let result;
+
+  try {
+    result = await env.AI.run(MODEL_ID, { messages });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.toString() }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
+  const output = extract(result);
+  return Response.json({ lyrics: output });
+}
+
+//TODOOO
+
+    // ---------- THESAURUS ----------
+    if (url.pathname === "/synonyms" && request.method === "POST") {
+      const { lines } = await request.json();
+
+      const system = makeSystemPrompt("THESAURUS", {}, armoniaProtocol);
+
+      const msg = lines.map((line, i) => `${i + 1}. ${line}`).join("\n");
+
+      const messages = [
+        { role: "system", content: system },
+        { role: "user", content: `Analyze synonyms by line:\n${msg}` }
+      ];
+
+      const result = await env.AI.run(MODEL_ID, { messages });
+      return json({ output: extract(result) });
     }
 
-    // Static asset fallback if you're using Wrangler `assets.directory`
-    // (e.g. public/index.html).
-    if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+    // ---------- RHYME ENGINE ----------
+
+    if (url.pathname === "/rhyme") {
+      const { target, dialect, genres } = await req.json();
+
+      const system = armoniaProtocol
+        .replace(/{{MODE}}/g, "RHYME_ENGINE")
+        .replace(/{{TARGET}}/g, target)
+        .replace(/{{DIALECT}}/g, dialect)
+        .replace(/{{GENRE}}/g, genres.join(", "));
+
+      const messages = [
+        { role: "system", content: system },
+        { role: "user", content: `Give me 5 true rhymes and 5 slant rhymes for "${target}". Include slang.` }
+      ];
+
+      const result = await env.AI.run(MODEL_ID, { messages });
+      const output = extract(result);
+
+      return Response.json({ rhymes: output });
     }
 
-    // Basic fallback
-    if (request.method === "GET" && url.pathname === "/") {
-      return new Response("Armonia AI worker is running, but no static UI was found.", {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
-    }
-
-    return new Response("Not Found", { status: 404 });
-  },
+    return new Response("Not found", { status: 404 });
+  }
 };
+
+function extract(result) {
+  if (result?.response) return result.response;
+  if (result?.output_text) return result.output_text;
+  if (typeof result === "string") return result;
+  return JSON.stringify(result);
+}
+
+function json(obj) {
+  return new Response(JSON.stringify(obj), {
+    headers: { "Content-Type": "application/json" }
+  });
+}
+
+// Build System Prompt
+function makeSystemPrompt(mode, attributes, template) {
+  return template
+    .replace("{{MODE}}", mode)
+    .replace("{{DIALECT}}", attributes.dialect || "Default")
+    .replace("{{GENRES}}", (attributes.genres || []).join(", "))
+    .replace("{{TONE}}", attributes.tone || "Neutral")
+    .replace("{{DICTION}}", attributes.diction || "Conversational")
+    .replace("{{TEMPO}}", attributes.tempo || "Mid");
+}
