@@ -11,6 +11,11 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+
+	"ai": {
+    "binding": "AI"
+  },
+
 	"assets": {
 		// The path to the directory containing the `index.html` file to be served at `/`
 		"directory": "./public"
