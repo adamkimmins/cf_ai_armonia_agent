@@ -6,7 +6,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        background: radial-gradient(circle at top, #24263a, #050509);
+        background: radial-gradient(circle at top, #24263a, #060509);
         display: block; /* restore normal layout flow */
         padding: 2rem;
         box-sizing: border-box;
@@ -29,12 +29,16 @@
 
         .panel {
         background: rgba(255,255,255,0.04);
+        transition: background-color 0.35s ease;
         border: 1px solid rgba(255,255,255,0.08);
         border-radius: 12px;
         padding: 1.1rem;
         flex: 1;
         max-width: 360px;
         min-width: 200px;
+        }
+        .panel:hover, .panel:active {
+        background: rgba(139, 166, 177, 0.08);
         }
 
         .panel h2 {
@@ -45,7 +49,8 @@
   width: 100%;
   min-height: 40px;
   max-height: 160px;
-  resize: vertical;
+  outline: none;
+  /* resize: vertical; */
   padding: 10px 12px;
   border-radius: 8px;
   background: rgba(255,255,255,0.07);
@@ -217,9 +222,14 @@
    LYRIC ASSISTANT PANEL STYLING
 ---------------------------------------------- */
 
+#dialect-select {
+  margin: 0.5rem 0 0 0;
+  background: rgba(255,255,255,0.07);
+}
+
 #lyric-writer {
   padding: 1.5rem;
-  background: rgba(255,255,255,0.03);
+  /* background: rgba(255,255,255,0.03); */
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 2rem;
@@ -378,7 +388,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
   overflow: hidden;
 }
 
-#line-numbers {
+
+/* #line-numbers {
+  display: inline-block;  
+  white-space: pre;
   padding: 8px 6px;
   text-align: right;
   user-select: none;
@@ -398,7 +411,56 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-family: monospace;
   line-height: 1.4em;
   outline: none;
+} */
+
+/* Mirror used only for wrapping measurements */
+#synonym-mirror {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  font-family: monospace;
+  font-size: 15px;                /* match textarea */
+  line-height: 1.4em;             /* match textarea */
+  padding: 8px;                   /* match #synonym-input padding */
+  box-sizing: border-box;
 }
+
+/* Make sure these line heights match exactly */
+#line-numbers {
+  padding: 8px 6px;
+  text-align: right;
+  user-select: none;
+  color: #777;
+  background: rgba(0,0,0,0.2);
+  font-family: monospace;
+  line-height: 1.4em;
+  display: inline-block;
+  white-space: pre;
+}
+
+#synonym-input {
+  flex: 1;
+
+  /* min-height: calc(1.4em + 8px);
+  line-height: 1.4em;  */
+  line-height: 1.4em;
+  height: auto;       /* let rows=1 control height */
+  min-height: auto;
+  outline: none;
+  padding: 8px;
+  border: none;
+  resize: none;
+  background: transparent;
+  color: #eee;
+  font-family: monospace;
+}
+
 
 #synonym-analyze {
   padding: 8px 14px;
@@ -455,8 +517,47 @@ input[type="range"]::-webkit-slider-thumb:hover {
   border-color: rgba(80,150,255,0.6);
   color: white;
 }
+/* TODO background active */
+
 
 /* ----------- SUGGESTION PANEL ----------- */
 
 
+::selection, ::-moz-selection {
+  background: rgba(0, 0, 0, 0);
+  color: rgb(142, 88, 203);
+}
+
+/* Highlighted active line */
+#active-line-highlight {
+  position: absolute;
+  /* margin: 9.5px 0 6.5px 0; */
+  left: 0;
+  right: 0;
+  height: 1.5em;              /* same as line-height */
+  background: rgba(222, 194, 255, 0.06);
+  pointer-events: none;       /* cursor passes through */
+  border-radius: 4px;
+  display: none;              /* hidden until activated */
+}
+
+#caret-mirror {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  visibility: hidden;
+
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.4em;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* #synonym-input {
+  padding-right: 14px; 
+} */
 

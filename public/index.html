@@ -32,7 +32,7 @@
         <!-- Dialect -->
         <label>Dialect:</label>
         <select id="dialect-select">
-          <option value="Default">Default (Standard American English)</option>
+          <option value="Default">Default</option>
           <option value="Appalachian">Appalachian</option>
           <option value="Southern">Southern</option>
           <option value="West Coast">West Coast</option>
@@ -82,7 +82,8 @@
         <h2>Thesaurus Tool</h2>
         <div class="line-editor">
           <span id="line-numbers"></span>
-          <textarea id="synonym-input"></textarea>
+           <div id="active-line-highlight"></div> <!-- TODO -->
+          <textarea id="synonym-input" rows="1"></textarea>
         </div>
         <button id="synonym-analyze">Analyze Lines</button>
         <div id="synonym-output"></div>
