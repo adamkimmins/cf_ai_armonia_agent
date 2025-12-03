@@ -1,14 +1,3 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-// I'm gonna keep this welcome for vibes
-
 import armoniaProtocol from "./prompts/armonia_protocol.txt";
 import helpPrompt from "./prompts/help_mode.txt";
 import writingPrompt from "./prompts/writing_mode.txt";
@@ -39,7 +28,6 @@ export default {
       return json({ answer: extract(result) });
     }
 
-    //TODO
     // ---------------- LYRIC GENERATOR ROUTE ----------------
 
     if (url.pathname === "/lyric" && request.method === "POST") {
@@ -65,24 +53,24 @@ export default {
     // ---------- THESAURUS ----------
     
     if (url.pathname === "/synonyms" && request.method === "POST") {
-      const { lines } = await request.json();
+      
+      const { target } = await request.json();
 
       const system = applyTemplate(thesaurusPrompt, {
         MODE: "Thesaurus"
       });
 
-      const input = lines.map((l,i) => `${i+1}. ${l}`).join("\n");
-
       const messages = [
         { role: "system", content: system },
-        { role: "user", content: `Analyze synonyms by line:\n${input}` }
+        { role: "user", content: `Give synonyms for: "${target}"` }
       ];
+
 
       const result = await env.AI.run(MODEL_ID, { messages });
       return json({ output: extract(result) });
     }
 
-
+    //TODO: Thesaurus Route alternate use case for rhyming instead of synonyms
     // ---------- RHYME ENGINE ----------
 
     if (url.pathname === "/rhyme") {
@@ -109,6 +97,7 @@ export default {
   }
 };
 
+// Utility to extract text from various AI response formats
 function extract(result) {
   if (result?.response) return result.response;
   if (result?.output_text) return result.output_text;
@@ -123,15 +112,6 @@ function json(obj) {
 }
 
 // Build System Prompt
-//OLD
-// function makeSystemPrompt(mode, attributes, template) {
-//   return template
-//     .replace("{{MODE}}", mode)
-//     .replace("{{DIALECT}}", attributes.dialect || "Default")
-//     .replace("{{GENRES}}", (attributes.genres || []).join(", "))
-//     .replace("{{TONE}}", attributes.tone || "Neutral")
-//     .replace("{{DICTION}}", attributes.diction || "Conversational")
-// }
 function applyTemplate(template, vars = {}) {
   return template
     .replace(/{{MODE}}/g, vars.MODE || "Help")
