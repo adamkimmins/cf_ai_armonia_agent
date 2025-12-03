@@ -4,6 +4,8 @@ Armonia AI provides three purpose-built modes to accelerate creative workflow:
  **Help Chatbot**, **Lyric Assistant**, and **Thesaurus Mode**.
 Each mode is optimized for *speed, clarity, and musical context*, similar to how Cloudflare tools are optimized for performance and reliability.
 
+*Link to Cloudflare hosted Website: https://cf_ai_armonia.a-bellia.workers.dev/*
+
 ---
 ## Help Assistant
 
